@@ -1067,17 +1067,14 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		//
-
-		background.render( currentRenderList, scene, camera, forceClear );
-
-		// render scene
-
+	
 		const opaqueObjects = currentRenderList.opaque;
 		const transparentObjects = currentRenderList.transparent;
 
-		if ( opaqueObjects.length > 0 ) renderObjects( opaqueObjects, scene, camera );
+		background.render(currentRenderList, scene, camera, forceClear);
+		if (opaqueObjects.length > 0) renderObjects(opaqueObjects, scene, camera);
 		if ( transparentObjects.length > 0 ) renderObjects( transparentObjects, scene, camera );
+		
 
 		//
 
@@ -1756,6 +1753,7 @@ function WebGLRenderer( parameters ) {
 		p_uniforms.setValue( _gl, 'normalMatrix', object.normalMatrix );
 		p_uniforms.setValue( _gl, 'modelMatrix', object.matrixWorld );
 
+		
 		return program;
 
 	}

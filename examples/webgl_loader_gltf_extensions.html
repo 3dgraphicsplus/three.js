@@ -25,7 +25,7 @@
 			import { RGBELoader } from './jsm/loaders/RGBELoader.js';
 
 			let orbitControls;
-			let camera, scene, renderer, loader;
+			let camera, scene, renderer, loader,rtTexture;
 			let gltf, background, envMap, mixer, gui, extensionControls;
 
 			const clock = new THREE.Clock();
@@ -154,13 +154,17 @@
 
 			function onload() {
 
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer = new THREE.WebGLRenderer( { antialias: true,rendererExtensionShaderTextureLod:true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.outputEncoding = THREE.sRGBEncoding;
 				renderer.toneMapping = THREE.ACESFilmicToneMapping;
 				renderer.toneMappingExposure = 1;
 				renderer.physicallyCorrectLights = true;
+				
+				//test need transluent
+				//renderer.sortObject = false;
+
 				document.body.appendChild( renderer.domElement );
 
 				window.addEventListener( 'resize', onWindowResize );
@@ -331,6 +335,8 @@
 					}
 
 					if ( sceneInfo.addEnvMap ) {
+	
+						rtTexture = new THREE.WebGLRenderTarget( 1024,1024, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
 
 						object.traverse( function ( node ) {
 
@@ -339,6 +345,8 @@
 
 								node.material.envMap = envMap;
 								node.material.envMapIntensity = 1.5; // boombox seems too dark otherwise
+								if(node.material.transmission > 0 || node.material.transmissionMap)
+									node.material.opaqueMap = rtTexture.texture; 
 
 							}
 
@@ -346,11 +354,13 @@
 
 						scene.background = background;
 
+							
+
 					}
 
 					object.traverse( function ( node ) {
 
-						if ( node.isMesh || node.isLight ) node.castShadow = true;
+						if ( node.isMesh || node.isLight ) node.castShadow = false;
 
 					} );
 
@@ -412,8 +422,34 @@
 
 			}
 
-			function render() {
+				function toggleOpaque() {
+					scene.traverse(function (node) {
 
+						if (node.material && (node.material.isMeshStandardMaterial ||
+							(node.material.isShaderMaterial && node.material.envMap !== undefined))) {
+
+							node.material.envMap = envMap;
+							node.material.envMapIntensity = 1.5; // boombox seems too dark otherwise
+							if (node.material.transmission > 0 || node.material.transmissionMap)
+								node.visible = ! node.visible;
+
+						}
+
+					});
+				}
+
+			function render() {
+				
+				if(rtTexture){
+				toggleOpaque();
+				renderer.setRenderTarget( rtTexture );
+				renderer.clear();
+				renderer.render( scene, camera );
+
+				toggleOpaque();
+				}
+				renderer.setRenderTarget( null );
+				renderer.clear();
 				renderer.render( scene, camera );
 
 			}

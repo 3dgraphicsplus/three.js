@@ -60,7 +60,8 @@ import {
 	Vector2,
 	Vector3,
 	VectorKeyframeTrack,
-	sRGBEncoding
+	sRGBEncoding,
+	WebGLRenderTarget
 } from '../../../build/three.module.js';
 
 class GLTFLoader extends Loader {
@@ -338,6 +339,10 @@ class GLTFLoader extends Loader {
 
 					case EXTENSIONS.KHR_MESH_QUANTIZATION:
 						extensions[ extensionName ] = new GLTFMeshQuantizationExtension();
+						break;
+
+					case EXTENSIONS.KHR_MATERIALS_TRANSMISSION:
+						extensions[ extensionName ] = new GLTFMaterialsTransmissionExtension();
 						break;
 
 					default:
@@ -1711,7 +1716,7 @@ function createDefaultMaterial( cache ) {
 			emissive: 0x000000,
 			metalness: 1,
 			roughness: 1,
-			transparent: false,
+			transparent: true,
 			depthTest: true,
 			side: FrontSide
 		} );
@@ -2885,7 +2890,7 @@ class GLTFParser {
 
 		} else {
 
-			materialParams.transparent = false;
+			materialParams.transparent = true;
 
 			if ( alphaMode === ALPHA_MODES.MASK ) {
 
@@ -3158,6 +3163,7 @@ class GLTFParser {
 				}
 
 				mesh.name = parser.createUniqueName( meshDef.name || ( 'mesh_' + meshIndex ) );
+
 
 				assignExtrasToUserData( mesh, meshDef );
 

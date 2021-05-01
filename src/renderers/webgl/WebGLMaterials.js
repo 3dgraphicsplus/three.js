@@ -593,7 +593,11 @@ function WebGLMaterials( properties ) {
 		if ( material.transmissionMap ) {
 
 			uniforms.transmissionMap.value = material.transmissionMap;
+			uniforms.opaqueMap.value = material.opaqueMap;
 
+		}
+		if ( material.opaqueMap ) {
+			uniforms.opaqueMap.value = material.opaqueMap;
 		}
 
 	}

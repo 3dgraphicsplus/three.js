@@ -281,6 +281,7 @@ class MaterialLoader extends Loader {
 
 		if ( json.transmission !== undefined ) material.transmission = json.transmission;
 		if ( json.transmissionMap !== undefined ) material.transmissionMap = getTexture( json.transmissionMap );
+		if ( json.opaqueMap !== undefined ) material.opaqueMap = getTexture( json.opaqueMap );
 
 		return material;
 

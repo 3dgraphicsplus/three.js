@@ -88,14 +88,14 @@
 
 				const material = new THREE.MeshPhysicalMaterial( {
 					color: params.color,
-					metalness: 0,
-					roughness: 0,
+					metalness: 0.0,
+					roughness: 0.4,
 					alphaMap: texture,
-					alphaTest: 0.5,
+					//alphaTest: 0.5,
 					envMap: hdrCubeRenderTarget.texture,
 					envMapIntensity: params.envMapIntensity,
-					depthWrite: false,
-					transmission: params.transmission, // use material.transmission for glass materials
+					//depthWrite: false,
+					transmission: 1,//params.transmission, // use material.transmission for glass materials
 					opacity: 1, // set material.opacity to 1 when material.transmission is non-zero
 					transparent: true
 				} );

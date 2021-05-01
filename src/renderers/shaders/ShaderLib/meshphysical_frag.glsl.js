@@ -15,6 +15,14 @@ uniform float opacity;
 
 #ifdef TRANSMISSION
 	uniform float transmission;
+	uniform sampler2D opaqueMap;
+	//uniform vec2 resolution;
+	vec2 resolution;
+	//uniform vec2 u_TransmissionFramebufferSize;
+	
+	uniform mat4 modelMatrix;
+	uniform mat4 modelViewMatrix;
+	uniform mat4 projectionMatrix;
 #endif
 
 #ifdef REFLECTIVITY
@@ -56,6 +64,7 @@ varying vec3 vViewPosition;
 #include <aomap_pars_fragment>
 #include <lightmap_pars_fragment>
 #include <emissivemap_pars_fragment>
+#include <transmission_fragment>
 #include <transmissionmap_pars_fragment>
 #include <bsdfs>
 #include <cube_uv_reflection_fragment>
@@ -108,12 +117,37 @@ void main() {
 	// modulation
 	#include <aomap_fragment>
 
-	vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-
+	vec3 diffuse_with_transmit = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
 	// this is a stub for the transmission model
 	#ifdef TRANSMISSION
-		diffuseColor.a *= mix( saturate( 1. - totalTransmission + linearToRelativeLuminance( reflectedLight.directSpecular + reflectedLight.indirectSpecular ) ), 1.0, metalness );
+    	vec3 f_transmission = vec3(0.0);
+		
+		vec3 v = geometry.viewDir;
+		vec3 n = geometry.normal;
+		vec3 f0 = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+		vec3 f90 = vec3(1.0,1.0,1.0);
+		float ior = 1.2/0.8;
+		float thickness = 0.01;
+		//PoC
+		vec2 u_TransmissionFramebufferSize = vec2(1024.0,1024.0);
+		
+        vec3 attenuationColor = vec3(1.0, 1.0, 1.0);
+        float attenuationDistance = 0.0;
+		//vec3 transmittedLight = getTransmissionSample(normalizedFragCoord, roughnessFactor, ior,u_TransmissionFramebufferSize.x,opaqueMap);
+		vec3 transmittedLight = getIBLVolumeRefraction(u_TransmissionFramebufferSize.x,opaqueMap,
+			n, v,
+			roughnessFactor,
+			diffuseColor.rgb, f0, f90,
+			geometry.position, modelMatrix, viewMatrix, projectionMatrix,
+			ior, thickness, attenuationColor, attenuationDistance
+		);
+		f_transmission += totalTransmission * transmittedLight;
+		//outgoingLight = gl_FragColor.rgb;
+		diffuse_with_transmit = mix(diffuse_with_transmit, f_transmission, totalTransmission);
+		//outgoingLight  = texture2D(envMap,vUv);
 	#endif
+
+	vec3 outgoingLight = diffuse_with_transmit + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
