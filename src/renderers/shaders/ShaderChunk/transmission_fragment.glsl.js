@@ -68,10 +68,10 @@ export default /* glsl */`
 		return transmittedLight;
 	}
 
-	vec3 getIBLVolumeRefraction(float w, sampler2D map, vec3 n, vec3 v, float perceptualRoughness, vec3 baseColor, vec3 f0, vec3 f90,
+	vec3 getIBLVolumeRefraction(float w, sampler2D map,  const in vec3 normal, const in vec3 view, const in float perceptualRoughness, vec3 baseColor, const in vec3 f0, vec3 f90,
 		vec3 position, mat4 modelMatrix, mat4 viewMatrix, mat4 projMatrix, float ior, float thickness, vec3 attenuationColor, float attenuationDistance)
 	{
-		vec3 transmissionRay = getVolumeTransmissionRay(n, v, thickness, ior, modelMatrix);
+		vec3 transmissionRay = getVolumeTransmissionRay(normal, view, thickness, ior, modelMatrix);
 		vec3 refractedRayExit = position + transmissionRay;
 
 		//FIXME Wrong refraction vector
@@ -93,13 +93,9 @@ export default /* glsl */`
 		vec3 transmittedLight = getTransmissionSample(refractionCoords, perceptualRoughness, ior,w,map);
 
 		vec3 attenuatedColor = applyVolumeAttenuation(transmittedLight, length(transmissionRay), attenuationColor, attenuationDistance);
-
-		// Sample GGX LUT to get the specular component.
-		float NdotV = clamp(dot(n, v), 0.0, 1.0);
-		vec2 brdfSamplePoint = clamp(vec2(NdotV, perceptualRoughness), vec2(0.0, 0.0), vec2(1.0, 1.0));
-		//TODO apply GGXLUT
-		vec2 brdf = vec2(1.0,0.5);//texture(u_GGXLUT, brdfSamplePoint).rg;   
-		vec3 specularColor = f0 * brdf.x + f90 * brdf.y;
+  
+		//BRDF specular - TODO: using LUT is better performance?
+		vec3 specularColor = BRDF_Specular_GGX_Environment(view, normal, f0, perceptualRoughness);
 
 		return (1.0 - specularColor) * attenuatedColor * baseColor;
 	}
