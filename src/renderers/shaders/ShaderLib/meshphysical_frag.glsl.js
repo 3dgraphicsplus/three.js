@@ -116,6 +116,7 @@ void main() {
 	#include <aomap_fragment>
 
 	vec3 diffuse_with_transmit = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
+	
 	// this is a stub for the transmission model
 	#ifdef TRANSMISSION
     	vec3 f_transmission = vec3(0.0);
@@ -123,11 +124,15 @@ void main() {
 		vec3 v = geometry.viewDir;
 		vec3 n = geometry.normal;
 		vec3 f0 = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+
+		//TODO
 		vec3 f90 = vec3(1.0);
+		//TODO
 		float ior = 1.2/0.8;
+		//TODO
 		float thickness = 0.01;
 
-		//PoC
+		//FIXME - Do we need smaller resolution support?
 		vec2 opaqueMapSize = resolution;
 		
 		//TODO
@@ -142,10 +147,9 @@ void main() {
 			geometry.position, modelMatrix, viewMatrix, projectionMatrix,
 			ior, thickness, attenuationColor, attenuationDistance
 		);
+
 		f_transmission += totalTransmission * transmittedLight;
-		//outgoingLight = gl_FragColor.rgb;
 		diffuse_with_transmit = mix(diffuse_with_transmit, f_transmission, totalTransmission);
-		//outgoingLight  = texture2D(envMap,vUv);
 	#endif
 
 	vec3 outgoingLight = diffuse_with_transmit + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
