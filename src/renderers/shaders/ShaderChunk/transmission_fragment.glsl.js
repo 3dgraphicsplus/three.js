@@ -52,14 +52,6 @@ export default /* glsl */`
 		return vec4(sRGBToLinear3(srgbIn.xyz), srgbIn.w);
 	}
 
-	// vec3 getTransmissionSample(vec2 fragCoord, float roughness, float ior,sampler2D  u_TransmissionFramebufferSampler)
-	// {
-	// 	float framebufferLod = log2(float(1024)) * applyIorToRoughness(roughness, ior);
-	// 	vec3 transmittedLight = textureLod(u_TransmissionFramebufferSampler, fragCoord.xy, framebufferLod).rgb;
-	// 	transmittedLight = sRGBToLinear3(transmittedLight);
-	// 	return transmittedLight;
-	// }
-
 	vec3 getTransmissionSample(vec2 fragCoord, float roughness, float ior, float w, sampler2D map)
 	{
 		float framebufferLod = log2(float(w)) * applyIorToRoughness(roughness, ior);
@@ -81,12 +73,9 @@ export default /* glsl */`
 		// refractionCoords += 1.0;
 		// refractionCoords /= 2.0;
 
-		
-		vec2 normalizedFragCoord = vec2(0.0,0.0);
-		//FIXME real windows size
-		vec2 u_ScreenSize = vec2(1077.0,902.0);
-		normalizedFragCoord.x = gl_FragCoord.x/float(u_ScreenSize.x);
-		normalizedFragCoord.y = gl_FragCoord.y/float(u_ScreenSize.y);
+		vec2 normalizedFragCoord;
+		normalizedFragCoord.x = gl_FragCoord.x/float(resolution.x);
+		normalizedFragCoord.y = gl_FragCoord.y/float(resolution.y);
 		vec2 refractionCoords = normalizedFragCoord;
 
 		// Sample framebuffer to get pixel the refracted ray hits.

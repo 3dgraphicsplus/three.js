@@ -16,10 +16,7 @@ uniform float opacity;
 #ifdef TRANSMISSION
 	uniform float transmission;
 	uniform sampler2D opaqueMap;
-	uniform sampler2D ggxLUTMap;
-	//uniform vec2 resolution;
-	vec2 resolution;
-	//uniform vec2 u_TransmissionFramebufferSize;
+	uniform vec2 resolution;
 	
 	uniform mat4 modelMatrix;
 	uniform mat4 modelViewMatrix;
@@ -129,15 +126,16 @@ void main() {
 		vec3 f90 = vec3(1.0);
 		float ior = 1.2/0.8;
 		float thickness = 0.01;
+
 		//PoC
-		vec2 u_TransmissionFramebufferSize = vec2(1024.0,1024.0);
+		vec2 opaqueMapSize = resolution;
 		
 		//TODO
         vec3 attenuationColor = vec3(1.0, 1.0, 1.0);
 		//TODO
         float attenuationDistance = 0.0;
 
-		vec3 transmittedLight = getIBLVolumeRefraction(u_TransmissionFramebufferSize.x,opaqueMap,
+		vec3 transmittedLight = getIBLVolumeRefraction(opaqueMapSize.x,opaqueMap,
 			n, v,
 			roughnessFactor,
 			diffuseColor.rgb, f0, f90,

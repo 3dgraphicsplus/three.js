@@ -1753,6 +1753,8 @@ function WebGLRenderer( parameters ) {
 		p_uniforms.setValue( _gl, 'normalMatrix', object.normalMatrix );
 		p_uniforms.setValue( _gl, 'modelMatrix', object.matrixWorld );
 
+		p_uniforms.setValue( _gl, 'resolution', [_width * _pixelRatio, _height * _pixelRatio] );
+
 		
 		return program;
 

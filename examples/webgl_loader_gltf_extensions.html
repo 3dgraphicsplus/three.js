@@ -335,8 +335,9 @@
 					}
 
 					if ( sceneInfo.addEnvMap ) {
-	
-						rtTexture = new THREE.WebGLRenderTarget( 1024,1024, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
+						let renderSize = new THREE.Vector2();
+						renderer.getSize(renderSize);
+						rtTexture = new THREE.WebGLRenderTarget( renderSize.x,renderSize.y, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
 
 						object.traverse( function ( node ) {
 
