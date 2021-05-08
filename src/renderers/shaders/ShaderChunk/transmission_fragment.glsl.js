@@ -69,10 +69,10 @@ export default /* glsl */`
 
 		//FIXME Wrong refraction vector
 		// Project refracted vector on the framebuffer, while mapping to normalized device coordinates.
-		// vec4 ndcPos = projMatrix * viewMatrix * vec4(refractedRayExit, 1.0);
-		// vec2 refractionCoords = ndcPos.xy / ndcPos.w;
-		// refractionCoords += 1.0;
-		// refractionCoords /= 2.0;
+		//  vec4 ndcPos = projMatrix * viewMatrix * vec4(refractedRayExit, 1.0);
+		//  vec2 refractionCoords = ndcPos.xy / ndcPos.w;
+		//  refractionCoords += 1.0;
+		//  refractionCoords /= 2.0;
 
 		vec2 normalizedFragCoord;
 		normalizedFragCoord.x = gl_FragCoord.x/float(resolution.x);

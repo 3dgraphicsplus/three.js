@@ -338,7 +338,9 @@
 						let renderSize = new THREE.Vector2();
 						renderer.getSize(renderSize);
 						rtTexture = new THREE.WebGLRenderTarget( renderSize.x,renderSize.y, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
-
+						rtTexture.texture.minFilter = THREE.LinearMipMapLinearFilter;
+						rtTexture.texture.generateMipmaps = true;
+						rtTexture.texture.needsUpdate = true
 						object.traverse( function ( node ) {
 
 							if ( node.material && ( node.material.isMeshStandardMaterial ||

@@ -143,7 +143,7 @@ void main() {
 		vec3 transmittedLight = getIBLVolumeRefraction(opaqueMapSize.x,opaqueMap,
 			n, v,
 			roughnessFactor,
-			diffuseColor.rgb, f0, f90,
+			diffuse_with_transmit.rgb, f0, f90,
 			geometry.position, modelMatrix, viewMatrix, projectionMatrix,
 			ior, thickness, attenuationColor, attenuationDistance
 		);
