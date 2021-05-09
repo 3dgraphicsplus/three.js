@@ -137,7 +137,7 @@ void main() {
 		//TODO
 		float ior = 1.2/0.8;
 		//TODO
-		float thickness = 0.015;
+		float thickness = 0.01;
 
 		//FIXME - Do we need smaller resolution support?
 		vec2 opaqueMapSize = resolution;

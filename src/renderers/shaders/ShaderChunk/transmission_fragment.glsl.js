@@ -63,11 +63,9 @@ export default /* glsl */`
 	vec3 getIBLVolumeRefraction(float w, sampler2D map,  const in vec3 normal, const in vec3 view, const in float perceptualRoughness, vec3 baseColor, const in vec3 f0, vec3 f90,
 		vec3 position, mat4 modelMatrix, mat4 viewMatrix, mat4 projMatrix, float ior, float thickness, vec3 attenuationColor, float attenuationDistance)
 	{
-		//TODO volume attenuation with thickness
-		vec3 transmissionRay = getVolumeTransmissionRay(normal, view, thickness, ior, modelMatrix);
+		vec3 transmissionRay = getVolumeTransmissionRay(normal, -view, thickness, ior, modelMatrix);
 		vec3 refractedRayExit = position + transmissionRay;
 
-		//FIXME Wrong refraction vector
 		// Project refracted vector on the framebuffer, while mapping to normalized device coordinates.
 		 vec4 ndcPos = projMatrix * viewMatrix * vec4(refractedRayExit, 1.0);
 		 vec2 refractionCoords = ndcPos.xy / ndcPos.w;

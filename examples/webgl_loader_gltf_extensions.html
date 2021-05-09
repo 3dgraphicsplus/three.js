@@ -350,8 +350,9 @@
 
 								node.material.envMap = envMap;
 								node.material.envMapIntensity = 1.5; // boombox seems too dark otherwise
-								if(node.material.transmission > 0 || node.material.transmissionMap)
-									node.material.opaqueMap = rtTexture.texture; 
+								if(node.material.transmission > 0 || node.material.transmissionMap){
+									node.material.opaqueMap = rtTexture.texture;
+								}
 
 							}
 
