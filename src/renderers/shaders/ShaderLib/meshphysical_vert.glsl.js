@@ -3,6 +3,9 @@ export default /* glsl */`
 
 varying vec3 vViewPosition;
 
+//transmission
+varying vec3 vWorldPosition;
+
 #ifndef FLAT_SHADED
 
 	varying vec3 vNormal;
@@ -66,6 +69,8 @@ void main() {
 	#include <worldpos_vertex>
 	#include <shadowmap_vertex>
 	#include <fog_vertex>
+
+	vWorldPosition = worldPosition.xyz / worldPosition.w;
 
 }
 `;

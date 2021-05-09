@@ -339,7 +339,7 @@
 						renderer.getSize(renderSize);
 
 						//multisample is more heavy processing, THREE.WebGLRenderTarget is other option
-						rtTexture = new THREE.WebGLMultisampleRenderTarget( renderSize.x,renderSize.y, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
+						rtTexture = new THREE.WebGLMultisampleRenderTarget( renderSize.x,renderSize.y, { minFilter: THREE.LINEAR_MIPMAP_LINEAR, magFilter: THREE.NEAREST, format: THREE.RGBFormat } );
 						rtTexture.texture.minFilter = THREE.LinearMipMapLinearFilter;
 						rtTexture.texture.generateMipmaps = true;
 						rtTexture.texture.needsUpdate = true

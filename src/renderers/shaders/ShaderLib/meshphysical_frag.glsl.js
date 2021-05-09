@@ -17,6 +17,7 @@ uniform float opacity;
 	uniform float transmission;
 	uniform sampler2D opaqueMap;
 	uniform vec2 resolution;
+	varying vec3 vWorldPosition;
 	
 	uniform mat4 modelMatrix;
 	uniform mat4 modelViewMatrix;
@@ -120,17 +121,23 @@ void main() {
 	// this is a stub for the transmission model
 	#ifdef TRANSMISSION
     	vec3 f_transmission = vec3(0.0);
-		
-		vec3 v = geometry.viewDir;
+
+		vec3 v = normalize(cameraPosition - vWorldPosition);
+		//vec3 v = geometry.viewDir;
 		vec3 n = geometry.normal;
+		//if no normal
+		//vec3 n = normalize(cross(dFdx(v_Position), dFdy(v_Position)));
 		vec3 f0 = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+
+		//model-viewed position
+		vec3 mPosition = vWorldPosition;
 
 		//TODO
 		vec3 f90 = vec3(1.0);
 		//TODO
 		float ior = 1.2/0.8;
 		//TODO
-		float thickness = 0.01;
+		float thickness = 0.015;
 
 		//FIXME - Do we need smaller resolution support?
 		vec2 opaqueMapSize = resolution;
@@ -144,7 +151,7 @@ void main() {
 			n, v,
 			roughnessFactor,
 			diffuse_with_transmit.rgb, f0, f90,
-			geometry.position, modelMatrix, viewMatrix, projectionMatrix,
+			mPosition, modelMatrix, viewMatrix, projectionMatrix,
 			ior, thickness, attenuationColor, attenuationDistance
 		);
 
