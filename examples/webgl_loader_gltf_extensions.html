@@ -337,7 +337,9 @@
 					if ( sceneInfo.addEnvMap ) {
 						let renderSize = new THREE.Vector2();
 						renderer.getSize(renderSize);
-						rtTexture = new THREE.WebGLRenderTarget( renderSize.x,renderSize.y, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
+
+						//multisample is more heavy processing, THREE.WebGLRenderTarget is other option
+						rtTexture = new THREE.WebGLMultisampleRenderTarget( renderSize.x,renderSize.y, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
 						rtTexture.texture.minFilter = THREE.LinearMipMapLinearFilter;
 						rtTexture.texture.generateMipmaps = true;
 						rtTexture.texture.needsUpdate = true
