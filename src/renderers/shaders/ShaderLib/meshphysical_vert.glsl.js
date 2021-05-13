@@ -70,7 +70,9 @@ void main() {
 	#include <shadowmap_vertex>
 	#include <fog_vertex>
 
+#if defined( USE_ENVMAP ) || defined( DISTANCE ) || defined ( USE_SHADOWMAP )
 	vWorldPosition = worldPosition.xyz / worldPosition.w;
+#endif
 
 }
 `;

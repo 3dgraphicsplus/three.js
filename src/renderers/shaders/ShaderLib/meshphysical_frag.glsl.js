@@ -127,7 +127,7 @@ void main() {
 		vec3 n = geometry.normal;
 		//if no normal
 		//vec3 n = normalize(cross(dFdx(v_Position), dFdy(v_Position)));
-		vec3 f0 = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+		vec3 specularColor = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
 
 		//model-viewed position
 		vec3 mPosition = vWorldPosition;
@@ -150,7 +150,7 @@ void main() {
 		vec3 transmittedLight = getIBLVolumeRefraction(opaqueMapSize.x,opaqueMap,
 			n, v,
 			roughnessFactor,
-			diffuse_with_transmit.rgb, f0, f90,
+			diffuse_with_transmit.rgb, specularColor,
 			mPosition, modelMatrix, viewMatrix, projectionMatrix,
 			ior, thickness, attenuationColor, attenuationDistance
 		);

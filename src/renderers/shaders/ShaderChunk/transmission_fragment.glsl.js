@@ -60,7 +60,7 @@ export default /* glsl */`
 		return transmittedLight;
 	}
 
-	vec3 getIBLVolumeRefraction(float w, sampler2D map,  const in vec3 normal, const in vec3 view, const in float perceptualRoughness, vec3 baseColor, const in vec3 f0, vec3 f90,
+	vec3 getIBLVolumeRefraction(float w, sampler2D map,  const in vec3 normal, const in vec3 view, const in float perceptualRoughness, vec3 baseColor, const in vec3 specularColor,
 		vec3 position, mat4 modelMatrix, mat4 viewMatrix, mat4 projMatrix, float ior, float thickness, vec3 attenuationColor, float attenuationDistance)
 	{
 		vec3 transmissionRay = getVolumeTransmissionRay(normal, -view, thickness, ior, modelMatrix);
@@ -82,10 +82,9 @@ export default /* glsl */`
 
 		vec3 attenuatedColor = applyVolumeAttenuation(transmittedLight, length(transmissionRay), attenuationColor, attenuationDistance);
   
-		//BRDF specular - TODO: using LUT is better performance?
-		vec3 specularColor = BRDF_Specular_GGX_Environment(view, normal, f0, perceptualRoughness);
-
+		//We already know specular part
 		return (1.0 - specularColor) * attenuatedColor * baseColor;
+		//return attenuatedColor * baseColor;
 	}
 	#endif
 	`;
